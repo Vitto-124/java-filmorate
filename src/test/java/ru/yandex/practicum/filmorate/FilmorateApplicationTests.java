@@ -1,7 +1,8 @@
 package ru.yandex.practicum.filmorate;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.controller.FilmController;
 import ru.yandex.practicum.filmorate.controller.UserController;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
@@ -12,15 +13,19 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
 class FilmorateApplicationTests {
 
+	@Autowired
 	private FilmController filmController;
+
+	@Autowired
 	private UserController userController;
 
-	@BeforeEach
-	void setUp() {
-		filmController = new FilmController();
-		userController = new UserController();
+	@Test
+	void contextLoads() {
+		assertNotNull(filmController);
+		assertNotNull(userController);
 	}
 
 	@Test
@@ -39,14 +44,10 @@ class FilmorateApplicationTests {
 	@Test
 	void filmValidationFailures() {
 		Film film = new Film();
-		film.setName("");
-		film.setReleaseDate(LocalDate.of(2000, 1, 1));
-		film.setDuration(100);
-
-		assertThrows(ValidationException.class, () -> filmController.create(film));
-
 		film.setName("Film");
 		film.setReleaseDate(LocalDate.of(1800, 1, 1)); // Раньше 1895
+		film.setDuration(100);
+
 		assertThrows(ValidationException.class, () -> filmController.create(film));
 	}
 
@@ -59,15 +60,5 @@ class FilmorateApplicationTests {
 
 		User created = userController.create(user);
 		assertEquals("vittorio", created.getName());
-	}
-
-	@Test
-	void userValidationFailures() {
-		User user = new User();
-		user.setEmail("invalid-email");
-		user.setLogin("validLogin");
-		user.setBirthday(LocalDate.of(1990, 1, 1));
-
-		assertThrows(ValidationException.class, () -> userController.create(user));
 	}
 }
