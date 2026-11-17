@@ -28,7 +28,7 @@ public class ErrorHandler {
     @ExceptionHandler(Throwable.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @SuppressWarnings("unused")
-    public Map<String, String> handleThrowable(final Throwable e) {
+    public Map<String, String> handleThrowable(final Exception e) {
         return Map.of("error", "Произошла непредвиденная ошибка: " + e.getMessage());
     }
 }

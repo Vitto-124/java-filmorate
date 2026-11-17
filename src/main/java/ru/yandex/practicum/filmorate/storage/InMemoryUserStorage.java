@@ -5,12 +5,13 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Component
 @Slf4j
 public class InMemoryUserStorage implements UserStorage {
     private final Map<Long, User> users = new HashMap<>();
-    private long globalId = 0;
+    private final AtomicLong globalId = new AtomicLong(0);
 
     @Override
     public Collection<User> findAll() {
@@ -41,6 +42,6 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     private long getNextId() {
-        return ++globalId;
+        return globalId.incrementAndGet();
     }
 }

@@ -39,6 +39,9 @@ public class UserService {
     }
 
     public void addFriend(long userId, long friendId) {
+        if (userId == friendId) {
+            throw new ValidationException("Нельзя добавить самого себя в друзья");
+        }
         User user = getUserOrThrow(userId);
         User friend = getUserOrThrow(friendId);
 
@@ -77,6 +80,9 @@ public class UserService {
     }
 
     private void validateUser(User user) {
+        if (user.getLogin() != null && user.getLogin().contains(" ")) {
+            throw new ValidationException("Логин не может содержать пробелы");
+        }
         if (user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());
         }

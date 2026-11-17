@@ -5,12 +5,13 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Component
 @Slf4j
 public class InMemoryFilmStorage implements FilmStorage {
     private final Map<Long, Film> films = new HashMap<>();
-    private long globalId = 0;
+    private final AtomicLong globalId = new AtomicLong(0);
 
     @Override
     public Collection<Film> findAll() {
@@ -41,6 +42,6 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     private long getNextId() {
-        return ++globalId;
+        return globalId.incrementAndGet();
     }
 }
